@@ -1,0 +1,218 @@
+<!--**********************************
+            Content body start
+        ***********************************-->
+<div class="content-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Danh sách Ứng lương</h4>
+                        <button type="button" class="btn btn-success  m-b-10 m-l-5 mb-2" (click)="createModal()" id="toastr-success-top-right">Thêm mới <i class="fa fa-plus"></i></button>
+
+                        <div class="table-responsive" style="min-height: 450px;">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-3 col-md-3">
+                                        <div class="form-group" id="DataTables_Table_0_length">
+
+                                            <select class="form-control col-sm-3 col-md-3" style="height: 20px; font-size: 13px;" (ngModelChange)="LoadData($event)" [(ngModel)]="pageSize">
+                                                <option selected hidden disabled>10</option>
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-6">
+                                        <div class="dropdown custom-dropdown mr-1">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">
+                                                Tháng
+                                                <i class="fa fa-angle-down m-l-5"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" [ngClass]="{active: thang==''}" (click)="setThang('')">Tất
+                                                    cả</a>
+                                                <a *ngFor="let month of months" class="dropdown-item" [ngClass]="{ active: thang === month.value }" (click)="setThang(month.value)">{{
+                                                    month.label }}</a>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown custom-dropdown mr-1">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">
+                                                Năm
+                                                <i class="fa fa-angle-down m-l-5"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" [ngClass]="{active: nam==''}" (click)="setNam('')">Tất
+                                                    cả</a>
+                                                <a *ngFor="let year of years" class="dropdown-item" [ngClass]="{ active: nam === year }" (click)="setNam(year)">{{ year
+                                                    }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-2 col-md-3">
+                                        <form [formGroup]="frmSearch" class="form-horizontal" (ngSubmit)="loadData()">
+                                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                                <input formControlName="txt_search" type="search" class="border form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0">
+                                                <button type="submit" class="btn btn-info ml-1">Search</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class=" row " *ngIf="list_ungluongs  && list_ungluongs.length >0">
+                                    <div class="col-sm-12 ">
+                                        <table class="table table-striped table-bordered zero-configuration dataTable table-sm row-border hover">
+                                            <thead>
+                                                <tr role="row ">
+                                                    <th>STT</th>
+                                                    <th>Họ tên</th>
+                                                    <th>Nội dung</th>
+                                                    <th>Ngày</th>
+                                                    <th>Số tiền</th>
+                                                    <th>Trạng thái</th>
+                                                    <th></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let p of list_ungluongs; let i = index">
+                                                    <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                                                    <td>{{p.hoTen}}</td>
+                                                    <td>{{p.noiDung}}</td>
+                                                    <td>{{p.ngay|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{p.soTien| currency:'VND':'symbol':'3.0-1'}}</td>
+                                                    <td *ngIf="p.trangThai == 1"><span class="badge badge-success px-2">Đã duyệt</span></td>
+                                                    <td *ngIf="p.trangThai == 0"><span class="badge badge-primary px-2">Chờ duyệt</span></td>
+                                                    <td *ngIf="p.trangThai == 2"><span class="badge badge-danger px-2">Không được duyệt</span>
+                                                    </td>
+                                                    <td><span>
+                                                            <a (click)="openUpdateModal(p.id) " data-toggle="tooltip"
+                                                                data-placement="top" title="Sửa"><i
+                                                                    class="fa fa-pencil color-muted m-r-5"></i></a> |
+                                                            <a (click)="onRemove(p.id) " data-toggle="tooltip"
+                                                                data-placement="top" title="Xóa"><i
+                                                                    class="fa fa-close color-danger"></i></a></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                        <div class="bootstrap-pagination">
+                                            <ngb-pagination (pageChange)="LoadPage($event)" [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalItem"></ngb-pagination>
+
+                                        </div>
+                                    </div>
+                                    <div>{{ getShowingEntries() }}</div>
+                                </div>
+                                <div class=" row " *ngIf="list_ungluongs  && list_ungluongs.length == 0">
+                                    <h4>Không có dữ liệu</h4>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+                                                                Content body end
+                                                            ***********************************-->
+
+<div *ngIf="showUpdateModal" class="modal fade " id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quản lý Ứng lương</h5>
+                <button type="button" (click)="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-valide" *ngIf="doneSetupForm" [formGroup]="frmUngluong" (ngSubmit)="OnSubmit(frmUngluong.value)">
+                    <div class=" card">
+                        <div class="card-body">
+                            <div class="form-validation">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Họ tên(<span
+                                                style="color:red ;">*</span>):</label>
+                                        <div>
+                                            <div>
+                                                <ng-multiselect-dropdown formControlName="txt_manhanvien" [placeholder]="'Tên nhân viên'" [settings]="NVdropdownSettings" [data]="nhanVienList" [(ngModel)]="selectedNhanVien"></ng-multiselect-dropdown>
+
+                                            </div>
+                                            <!-- <div>
+                                <select formControlName="txt_manhanvien" class="form-control" [(ngModel)]="maNhanVien">
+                                  <option value="" selected disabled hidden>Nhân viên</option>
+                                  <option *ngFor="let p of list_nhanviens" value="{{p.maNhanVien}}">{{p.hoTen}}</option>
+                                </select>
+                              </div> -->
+                                            <div *ngIf="manhanvien.invalid && (manhanvien.dirty || manhanvien.touched)">
+                                                <div *ngIf="manhanvien.errors?.['required']" style="color:red ;">Họ tên không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Nội dung:</label>
+                                        <div><input formControlName="txt_noidung" type="text" class="form-control" placeholder="Nội dung">
+                                            <div *ngIf="noidung.invalid && (noidung.dirty || noidung.touched)">
+                                                <div *ngIf="noidung.errors?.['required']" style="color:red ;">Nội dung không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Ngày(<span
+                                                style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_ngay" type="date" class="form-control" placeholder="Ngày">
+                                            <div *ngIf="ngay.invalid && (ngay.dirty || ngay.touched)">
+                                                <div *ngIf="ngay.errors?.['required']" style="color:red ;">Ngày ứng tiền không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Số tiền(<span
+                                                style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_sotien" type="number" class="form-control" placeholder="Số tiền">
+                                            <div *ngIf="sotien.invalid && (sotien.dirty || sotien.touched)">
+                                                <div *ngIf="sotien.errors?.['required']" style="color:red ;">Số tiền không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Trạng thái:</label>
+                                        <div>
+                                            <select formControlName="txt_trangthai" class="form-control" [(ngModel)]="trangThai">
+                                                <option value="" selected disabled hidden>Trạng thái</option>
+                                                <option [value]="1">Đã duyệt</option>
+                                                <option [value]="0">Chờ duyệt</option>
+                                                <option [value]="2">Không được duyệt</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer form-group row">
+                                    <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary" [disabled]="frmUngluong.invalid">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

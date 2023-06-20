@@ -1,0 +1,241 @@
+<!--**********************************
+            Content body start
+        ***********************************-->
+<div class="content-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Tính lương nhân viên</h4>
+
+                        <div class="dataTables_length" id="DataTables_Table_0_length">
+                            <div>
+                                <div>
+                                    <form [formGroup]="frmTinhluong" class="form-horizontal" (ngSubmit)="onFormSubmit(frmTinhluong.value)">
+                                        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6 ml-2">
+                                                    <ng-multiselect-dropdown formControlName="txt_manhanvien" [placeholder]="'Tên nhân viên'" [settings]="NVdropdownSettings" [data]="nhanVienList" [(ngModel)]="selectedNhanVien"></ng-multiselect-dropdown>
+                                                    <!-- <select formControlName="txt_manhanvien" class="form-control">
+                        <option value="" selected disabled hidden>Nhân Viên</option>
+                        <option *ngFor="let n of list_nhanviens" value="{{n.maNhanVien}}">{{n.hoTen}}</option>
+                      </select> -->
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <input formControlName="txt_thang" type="number" class="col-md-3 border form-control-sm" placeholder="Tháng" aria-controls="DataTables_Table_0">
+                                                <input formControlName="txt_nam" type="number" class=" col-md-3 border form-control-sm" placeholder="Năm" aria-controls="DataTables_Table_0">
+                                                <button type="submit" class="btn btn-info ml-2">Tính Lương</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+
+                                <div class=" row " *ngIf="luongthuclinh">
+                                    <div class="col-sm-12 ">
+                                        <table class="table table-striped table-bordered zero-configuration dataTable table-sm row-border hover">
+                                            <thead>
+                                                <tr style="text-align: center;">
+                                                    <th rowspan="2">Họ Tên</th>
+                                                    <th rowspan="2">Phòng Ban</th>
+                                                    <th rowspan="2">Bộ Phận</th>
+                                                    <th rowspan="2">Chức Vụ</th>
+                                                    <th rowspan="2">Ngày công</th>
+                                                    <th rowspan="2">Lương</th>
+                                                    <th [attr.colspan]="phucap.length">Phụ Cấp</th>
+
+                                                    <th colspan="2">KTKL</th>
+                                                    <th [attr.colspan]="baohiem.length + 1">Các Khoản Khấu Trừ</th>
+                                                    <th rowspan="2">Thực Lĩnh</th>
+                                                </tr>
+                                                <tr style="text-align: center;">
+                                                    <th *ngFor="let pc of phucap">{{ pc.tenPhuCap }}</th>
+                                                    <th>KT</th>
+                                                    <th>KL</th>
+                                                    <th *ngFor="let bh of baohiem">{{ bh.loaiBaoHiem }}</th>
+
+                                                    <th>Ứng Lương</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{ nhanvien.hoTen }}</td>
+                                                    <td>{{ nhanvien.tenPhongBan }}</td>
+                                                    <td>{{ nhanvien.tenBoPhan }}</td>
+                                                    <td>{{ nhanvien.tenChucVu }}</td>
+                                                    <td>{{ luong_nhanvien.bangcong.value.tongngaycong }}</td>
+                                                    <td>{{ nhanvien.mucLuong|number}}</td>
+                                                    <td *ngFor="let pc of phucap">{{ pc.soTien|number}}</td>
+
+                                                    <td>{{ luong_nhanvien.ktkl.value.khenthuong|number}}</td>
+                                                    <td>{{ luong_nhanvien.ktkl.value.kyluat|number}}</td>
+                                                    <td *ngFor="let bh of baohiem">{{ bh.mucDong }}%</td>
+
+                                                    <td>{{ luong_nhanvien.ungluong.value.tongungluong|number}}</td>
+
+                                                    <td>{{luongthuclinh|number}}</td>
+
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Bảng lương nhân viên tháng {{thang}} năm {{nam}}</h4>
+                        <!-- <button type="button" class="btn btn-success  m-b-10 m-l-5 mb-2" (click)="createModal()" id="toastr-success-top-right">Thêm mới <i class="fa fa-plus"></i></button> -->
+
+                        <div class="table-responsive" style="min-height: 450px;">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-3 col-md-3">
+                                        <div class="form-group" id="DataTables_Table_0_length">
+
+                                            <select class="form-control col-sm-3 col-md-3" style="height: 20px; font-size: 13px;" (ngModelChange)="LoadData($event)" [(ngModel)]="pageSize">
+                        <option selected hidden disabled>10</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                      </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-md-4">
+                                        <div class="dataTables_length" id="DataTables_Table_0_length">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">
+                              Tháng
+                              <i class="fa fa-angle-down m-l-5"></i>
+                            </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a *ngFor="let month of months" class="dropdown-item" [ngClass]="{ active: thang === month.value }" (click)="setThang(month.value)">{{
+                                month.label }}</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">
+                              Năm
+                              <i class="fa fa-angle-down m-l-5"></i>
+                            </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a *ngFor="let year of years" class="dropdown-item" [ngClass]="{ active: nam === year }" (click)="setNam(year)">{{ year }}</a>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-2 col-md-4">
+                                        <form [formGroup]="frmSearch" class="form-horizontal" (ngSubmit)="loadData()">
+                                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                                <input formControlName="txt_search" type="search" class="border form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0">
+                                                <button type="submit" class="btn btn-info ml-1">Search</button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                    <div class="col-sm-1 col-md-1">
+                                        <button (click)="exportToExcel()" type="button" class="btn mt-2 btn-light">Export</button>
+                                    </div>
+
+
+
+
+
+                                </div>
+                                <div class=" row " *ngIf="bangluong && bangluong.length > 0">
+                                    <div class="col-sm-12 ">
+                                        <table id="BangLuongid" #table class="table table-striped table-bordered zero-configuration dataTable table-sm row-border hover">
+                                            <thead>
+                                                <tr style="text-align: center;">
+                                                    <th rowspan="2">STT</th>
+                                                    <th rowspan="2">Họ Tên</th>
+                                                    <th rowspan="2">Phòng Ban</th>
+                                                    <th rowspan="2">Bộ Phận</th>
+                                                    <th rowspan="2">Chức Vụ</th>
+                                                    <th rowspan="2">Ngày công</th>
+                                                    <th rowspan="2">Lương</th>
+                                                    <th rowspan="2">Phụ Cấp</th>
+                                                    <th rowspan="2">KTKL</th>
+                                                    <th colspan="2">Các Khoản Khấu Trừ</th>
+                                                    <th rowspan="2">Thực Lĩnh</th>
+                                                    <th rowspan="2"></th>
+                                                </tr>
+                                                <tr style="text-align: center;">
+                                                    <th>Bảo Hiểm</th>
+                                                    <th>Ứng Lương</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let bl of bangluong; let i = index">
+                                                    <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                                                    <td>{{ bl.hoTen }}</td>
+                                                    <td>{{ bl.tenPhongBan }}</td>
+                                                    <td>{{ bl.tenBoPhan }}</td>
+                                                    <td>{{ bl.tenChucVu }}</td>
+                                                    <td>{{ bl.tongNgayCong }}</td>
+                                                    <td>{{ bl.luong|number}}</td>
+                                                    <td>{{bl.tongPhuCap|number}}</td>
+                                                    <td>{{bl.tongKtkl|number}}</td>
+                                                    <td>{{bl.tongBaoHiem|number}}</td>
+                                                    <td>{{bl.tongUngLuong|number}}</td>
+                                                    <td>{{bl.luongThucLinh|number}}</td>
+                                                    <td><span>
+                              <a (click)="ChiTiet(bl.maNhanVien) " data-toggle="tooltip" data-placement="top"
+                                title="Xem"><i class="fa fa-eye color-muted m-r-5"></i></a> |
+                              <a (click)="onRemove(bl.maBangLuong) " data-toggle="tooltip" data-placement="top"
+                                title="Xóa"><i class="fa fa-close color-danger"></i></a></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                        <div class="bootstrap-pagination">
+                                            <ngb-pagination (pageChange)="LoadPage($event)" [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalItem"></ngb-pagination>
+
+                                        </div>
+                                    </div>
+                                    <div>{{ getShowingEntries() }}</div>
+                                </div>
+                                <div class=" row " *ngIf="bangluong && bangluong.length == 0">
+                                    <h4>Không có dữ liệu</h4>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+
+<!--**********************************
+                          Content body end
+                      ***********************************-->

@@ -1,0 +1,190 @@
+<!--**********************************
+            Content body start
+        ***********************************-->
+<div class="content-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Danh sách Lương</h4>
+                        <button type="button" class="btn btn-success  m-b-10 m-l-5 mb-2" (click)="createModal()" id="toastr-success-top-right">Thêm mới <i class="fa fa-plus"></i></button>
+
+                        <div class="table-responsive" style="min-height: 450px;">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-3 col-md-3">
+                                        <div class="form-group" id="DataTables_Table_0_length">
+
+                                            <select class="form-control col-sm-3 col-md-3" style="height: 20px; font-size: 13px;" (ngModelChange)="LoadData($event)" [(ngModel)]="pageSize">
+                        <option selected hidden disabled>10</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                      </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-6">
+                                        <div class="dropdown custom-dropdown mr-1">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">
+                        Tháng
+                        <i class="fa fa-angle-down m-l-5"></i>
+                      </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" [ngClass]="{active: thang==''}" (click)="setThang('')">Tất
+                          cả</a>
+                                                <a *ngFor="let month of months" class="dropdown-item" [ngClass]="{ active: thang === month.value }" (click)="setThang(month.value)">{{
+                          month.label }}</a>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown custom-dropdown mr-1">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">
+                        Năm
+                        <i class="fa fa-angle-down m-l-5"></i>
+                      </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" [ngClass]="{active: nam==''}" (click)="setNam('')">Tất
+                          cả</a>
+                                                <a *ngFor="let year of years" class="dropdown-item" [ngClass]="{ active: nam === year }" (click)="setNam(year)">{{ year }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-2 col-md-3">
+                                        <form [formGroup]="frmSearch" class="form-horizontal" (ngSubmit)="loadData()">
+                                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                                <input formControlName="txt_search" type="search" class="border form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0">
+                                                <button type="submit" class="btn btn-info ml-1">Search</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class=" row " *ngIf="list_luongs  && list_luongs.length >0">
+                                    <div class="col-sm-12 ">
+                                        <table class="table table-striped table-bordered zero-configuration dataTable table-sm row-border hover">
+                                            <thead>
+                                                <tr role="row ">
+                                                    <th>STT</th>
+                                                    <th>Họ tên</th>
+                                                    <th>Mức lương</th>
+                                                    <th>Ngày bắt đầu</th>
+                                                    <th>Ngày kết thúc</th>
+                                                    <th></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let p of list_luongs; let i = index">
+                                                    <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                                                    <td>{{p.hoTen}}</td>
+
+
+                                                    <td>{{p.mucLuong| currency:'VND':'symbol':'3.0-1'}}</td>
+                                                    <td>{{p.ngayBatDau|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{p.ngayKetThuc|date:'dd/MM/yyyy'}}</td>
+                                                    <td><span>
+                              <a (click)="openUpdateModal(p.maLuong) " data-toggle="tooltip" data-placement="top"
+                                title="Sửa"><i class="fa fa-pencil color-muted m-r-5"></i></a> |
+                              <a (click)="onRemove(p.maLuong) " data-toggle="tooltip" data-placement="top"
+                                title="Xóa"><i class="fa fa-close color-danger"></i></a></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                        <div class="bootstrap-pagination">
+                                            <ngb-pagination (pageChange)="LoadPage($event)" [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalItem"></ngb-pagination>
+
+                                        </div>
+                                    </div>
+                                    <div>{{ getShowingEntries() }}</div>
+                                </div>
+                                <div class=" row " *ngIf="list_luongs  && list_luongs.length == 0">
+                                    <h4>Không có dữ liệu</h4>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+                                                                      Content body end
+                                                                  ***********************************-->
+
+<div *ngIf="showUpdateModal" class="modal fade " id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quản lý Lương</h5>
+                <button type="button" (click)="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-valide" *ngIf="doneSetupForm" [formGroup]="frmLuong" (ngSubmit)="OnSubmit(frmLuong.value)">
+                    <div class=" card">
+                        <div class="card-body">
+                            <div class="form-validation">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Họ tên(<span style="color:red ;">*</span>):</label>
+                                        <div>
+                                            <div>
+                                                <ng-multiselect-dropdown formControlName="txt_manhanvien" [placeholder]="'Tên nhân viên'" [settings]="NVdropdownSettings" [data]="nhanVienList" [(ngModel)]="selectedNhanVien"></ng-multiselect-dropdown>
+
+                                            </div>
+                                            <!-- <div>
+                                      <select formControlName="txt_manhanvien" class="form-control" [(ngModel)]="maNhanVien">
+                                        <option value="" selected disabled hidden>Nhân viên</option>
+                                        <option *ngFor="let p of list_nhanviens" value="{{p.maNhanVien}}">{{p.hoTen}}</option>
+                                      </select>
+                                    </div> -->
+                                            <div *ngIf="manhanvien.invalid && (manhanvien.dirty || manhanvien.touched)">
+                                                <div *ngIf="manhanvien.errors?.['required']" style="color:red ;">Họ tên không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Mức lương:</label>
+                                        <div><input formControlName="txt_mucluong" type="text" class="form-control" placeholder="Mức lương">
+                                            <div *ngIf="mucluong.invalid && (mucluong.dirty || mucluong.touched)">
+                                                <div *ngIf="mucluong.errors?.['required']" style="color:red ;">Mức lương không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Ngày bắt đầu(<span style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_ngaybatdau" type="date" class="form-control" placeholder="Ngày bắt đầu">
+                                            <div *ngIf="ngaybatdau.invalid && (ngaybatdau.dirty || ngaybatdau.touched)">
+                                                <div *ngIf="ngaybatdau.errors?.['required']" style="color:red ;">Ngày bắt đầu không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer form-group row">
+                                    <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary" [disabled]="frmLuong.invalid">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,390 @@
+<!--**********************************
+            Content body start
+        ***********************************-->
+<div class="content-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Danh sách nhân viên</h4>
+                        <button *ngIf="user.roleCV == 'Giám đốc' || user.rolePB == 'Tài chính và quản lý' && user.roleCV == 'Trưởng phòng' || user.rolePB == 'Tài chính và quản lý' && user.roleBP == 'Nhân sự'" type="button" class="btn btn-success  m-b-10 m-l-5 mb-2" (click)="createModal()"
+                            id="toastr-success-top-right">Thêm mới <i class="fa fa-plus"></i></button>
+
+                        <div class="table-responsive" style="min-height: 470px;">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-2 col-md-2">
+                                        <div class="form-group" id="DataTables_Table_0_length">
+
+                                            <select class="form-control col-sm-6 col-md-6" (ngModelChange)="LoadData($event)" [(ngModel)]="pageSize">
+                        <option selected hidden disabled>10</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">35</option>
+                        <option value="50">50</option>
+                      </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-6">
+                                        <div class="dataTables_length" id="DataTables_Table_0_length">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">Phòng
+                              Ban <i class="fa fa-angle-down m-l-5"></i>
+                            </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" [ngClass]="{active: phongban==''}" (click)="setPhongBan('')">Tất
+                                cả</a>
+                                                            <a class="dropdown-item" *ngFor="let p of list_phongbans" [ngClass]="{active: phongban==p.maPhongBan}" (click)="setPhongBan(p.maPhongBan)">{{p.tenPhongBan}}</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">Bộ Phận
+                              <i class="fa fa-angle-down m-l-5"></i>
+                            </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" [ngClass]="{active: bophan==''}" (click)="setBoPhan('')">Tất
+                                cả</a>
+                                                            <a class="dropdown-item" *ngFor="let b of list_bophans" [ngClass]="{active: bophan==b.maBoPhan}" (click)="setBoPhan(b.maBoPhan)">{{b.tenBoPhan}}</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">Chức Vụ
+                              <i class="fa fa-angle-down m-l-5"></i>
+                            </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" [ngClass]="{active: chucvu==''}" (click)="setChucVu('')">Tất
+                                cả</a>
+                                                            <a class="dropdown-item" *ngFor="let c of list_chucvus" [ngClass]="{active: chucvu==c.maChucVu}" (click)="setChucVu(c.maChucVu)">{{c.tenChucVu}}</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">Trình Độ
+                              <i class="fa fa-angle-down m-l-5"></i>
+                            </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" [ngClass]="{active: trinhdo==''}" (click)="setTrinhDo('')">Tất
+                                cả</a>
+                                                            <a class="dropdown-item" *ngFor="let t of list_trinhdos" [ngClass]="{active: trinhdo==t.maTrinhDo}" (click)="setTrinhDo(t.maTrinhDo)">{{t.tenTrinhDo}}</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="dropdown">Trạng
+                              Thái
+                              <i class="fa fa-angle-down m-l-5"></i>
+                            </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" [ngClass]="{active: loaitrangthai==''}" (click)="setTrangThai('')">Tất
+                                cả</a>
+                                                            <a class="dropdown-item" [ngClass]="{active: loaitrangthai=='1'}" (click)="setTrangThai('1')">Đang làm việc</a>
+                                                            <a class="dropdown-item" [ngClass]="{active: loaitrangthai=='0'}" (click)="setTrangThai('0')">Đã
+                                nghỉ việc</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dropdown custom-dropdown mr-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="resetBoloc()">Reset
+                            </button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-2 col-md-3">
+                                        <form [formGroup]="frmSearch" class="form-horizontal" (ngSubmit)="loadData()">
+                                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                                <input formControlName="txt_search" type="search" class="border form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0">
+                                                <button type="submit" class="btn btn-info ml-1">Search</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="col-sm-1 col-md-1">
+                                        <button (click)="exportToExcel()" type="button" class="btn mt-2 btn-light">Export</button>
+                                        <!-- <input type="file" (change)="onFileSelected($event)"> -->
+                                    </div>
+                                </div>
+                                <div class=" row " *ngIf="list_nhanviens  && list_nhanviens.length >0">
+                                    <div class="col-sm-12 ">
+                                        <table id="NhanVienid" class="table table-striped table-bordered zero-configuration dataTable table-sm row-border hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Hình ảnh</th>
+                                                    <th>Họ tên</th>
+                                                    <th>Giới tính</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>Điện thoại</th>
+                                                    <th>Email</th>
+                                                    <th>Phòng ban</th>
+                                                    <th>Bộ phận</th>
+                                                    <th>Chức vụ</th>
+                                                    <th *ngIf="user.roleCV == 'Giám đốc' || user.rolePB == 'Tài chính và quản lý' && user.roleCV == 'Trưởng phòng' || user.rolePB == 'Tài chính và quản lý' && user.roleBP == 'Nhân sự'">
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let n of list_nhanviens; let i = index">
+                                                    <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                                                    <td><img height="68px" width="51px" src="{{n.hinhAnh}}"></td>
+                                                    <td>{{n.hoTen}}</td>
+                                                    <td>{{n.gioiTinh}}</td>
+                                                    <td>{{n.ngaySinh|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{n.dienThoai}}</td>
+                                                    <td>{{n.email}}</td>
+                                                    <td>{{n.tenPhongBan}}</td>
+                                                    <td>{{n.tenBoPhan}}</td>
+                                                    <td>{{n.tenChucVu}}</td>
+                                                    <td *ngIf="user.roleCV == 'Giám đốc' || user.rolePB == 'Tài chính và quản lý' && user.roleCV == 'Trưởng phòng' || user.rolePB == 'Tài chính và quản lý' && user.roleBP == 'Nhân sự'">
+                                                        <span>
+                              <a href="#" (click)="openUpdateModal(n.maNhanVien) " data-toggle="tooltip"
+                                data-placement="top" title="Sửa"><i class="fa fa-pencil color-muted m-r-5"></i></a> |
+                              <a href="#" (click)="onRemove(n.maNhanVien) " data-toggle="tooltip" data-placement="top"
+                                title="Xóa"><i class="fa fa-close color-danger"></i></a></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+
+                                        <div>
+                                            <ngb-pagination (pageChange)="LoadPage($event)" [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalItem"></ngb-pagination>
+                                        </div>
+                                    </div>
+                                    <div>{{ getShowingEntries() }}</div>
+                                </div>
+                                <div class=" row " *ngIf="list_nhanviens  && list_nhanviens.length == 0">
+                                    <h4>Không có dữ liệu</h4>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+                  Content body end
+              ***********************************-->
+
+<div *ngIf="showUpdateModal" class="modal fade " id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quản lý nhân viên</h5>
+                <button type="button" (click)="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-valide" *ngIf="doneSetupForm" [formGroup]="frmNhanvien" (ngSubmit)="OnSubmit(frmNhanvien.value)">
+                    <div class=" card">
+                        <div class="card-body">
+                            <div class="form-validation">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Họ tên(<span style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_hoten" type="text" class="form-control" placeholder="Họ tên">
+                                            <div *ngIf="hoten.invalid && (hoten.dirty || hoten.touched)">
+                                                <div *ngIf="hoten.errors?.['required']" style="color:red ;">Họ tên không được rỗng
+                                                </div>
+                                                <div *ngIf="hoten.errors?.['minlength']" style="color:red ;">
+                                                    Họ tên không được nhỏ hơn 3 ký tự
+                                                </div>
+                                                <div *ngIf="hoten.errors?.['maxlength']" style="color:red ;">
+                                                    Họ tên không được lớn hơn 250 ký tự
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Giới tính(<span style="color:red ;">*</span>)</label>
+                                        <div>
+                                            <label class="radio-inline mr-5">
+                        <input formControlName="txt_gioitinh" type="radio" class="styled" name="txt_gioitinh"
+                          checked="checked" value="Nam">
+                        Nam
+                      </label>
+
+                                            <label class="radio-inline">
+                        <input formControlName="txt_gioitinh" type="radio" class="styled" name="txt_gioitinh"
+                          value="Nữ">
+                        Nữ
+                      </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Ngày sinh(<span style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_ngaysinh" type="date" class="form-control" placeholder="Ngày sinh">
+                                            <div *ngIf="ngaysinh.invalid && (ngaysinh.dirty || ngaysinh.touched)">
+                                                <div *ngIf="ngaysinh.errors?.['required']" style="color:red ;">Ngày sinh không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">CCCD(<span style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_cccd" type="text" class="form-control" placeholder="CCCD">
+                                            <div *ngIf="cccd.invalid && (cccd.dirty || cccd.touched)">
+                                                <div *ngIf="cccd.errors?.['required']" style="color:red ;">CCCD không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Địa chỉ(<span style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_diachi" type="text" class="form-control" placeholder="Địa chỉ">
+                                            <div *ngIf="diachi.invalid && (diachi.dirty || diachi.touched)">
+                                                <div *ngIf="diachi.errors?.['required']" style="color:red ;">Địa chỉ không được rỗng
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Hình ảnh:</label>
+                                        <div>
+                                            <div class="media no-margin-top">
+                                                <div class="media-left">
+                                                    <a href="#"><img [src]="nhanvien && nhanvien.hinhAnh?nhanvien.hinhAnh:'assets/images/placeholder.jpg'" style="width: 58px; height: 58px;" class="img-rounded" alt=""></a>
+                                                </div>
+
+                                                <div class="media-body">
+                                                    <input (change)="upload($event)" accept=".jpg,.png,.jpeg,.gif,.bmp,.tif,.tiff" type="file" class="file-styled">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Điện thoại(<span style="color:red ;">*</span>)</label>
+                                        <div><input formControlName="txt_dienthoai" type="text" class="form-control" placeholder="Điện thoại">
+                                            <div *ngIf="dienthoai.invalid && (dienthoai.dirty || dienthoai.touched)">
+                                                <div *ngIf="dienthoai.errors?.['required']" style="color:red ;">Số điện thoại không được rỗng!
+                                                </div>
+                                                <div *ngIf="dienthoai.errors?.['pattern']" style="color:red ;">Không đúng định dạng số điện thoại!
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Email(<span style="color:red ;">*</span>)</label>
+                                        <div><input formControlName="txt_email" type="text" class="form-control" placeholder="Email">
+                                            <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                                                <div *ngIf="email.errors?.['required']" style="color:red ;">Email không được rỗng!</div>
+                                                <div *ngIf="email.errors?.['email']" style="color:red ;">Không đúng định dạng của email!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Password(<span style="color:red ;">*</span>):</label>
+                                        <div><input formControlName="txt_password" type="text" class="form-control" placeholder="Password">
+                                            <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                                                <div *ngIf="password.errors?.['required']" style="color:red ;">Mật khẩu là bắt buộc</div>
+                                                <div *ngIf="password.errors?.['password']" style="color:red ;"> Độ dài mật khẩu tối thiểu phải là 8 ký tự và phải chứa ký tự đặc biệt @#!$%&*.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Phòng ban:</label>
+                                        <div>
+                                            <select formControlName="txt_maphongban" class="form-control" [(ngModel)]="maPhongBan">
+                        <option value="" selected disabled hidden>Phòng ban</option>
+                        <option *ngFor="let p of list_phongbans" value="{{p.maPhongBan}}">{{p.tenPhongBan}}</option>
+                      </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Bộ phận:</label>
+                                        <div>
+                                            <select formControlName="txt_mabophan" class="form-control" [(ngModel)]="maBoPhan">
+                        <option value="" selected disabled hidden>Bộ phận</option>
+                        <option *ngFor="let b of list_bophans" value="{{b.maBoPhan}}">{{b.tenBoPhan}}
+                        </option>
+
+                      </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Chức vụ:</label>
+                                        <div>
+                                            <select formControlName="txt_machucvu" class="form-control" [(ngModel)]="maChucVu">
+                        <option value="" selected disabled hidden>Chức vụ</option>
+                        <option *ngFor="let c of list_chucvus" value="{{c.maChucVu}}">{{c.tenChucVu}}</option>
+                      </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Trình độ:</label>
+                                        <div>
+                                            <select formControlName="txt_matrinhdo" class="form-control" [(ngModel)]="maTrinhDo">
+                        <option value="" selected disabled hidden>Trình độ</option>
+                        <option *ngFor="let t of list_trinhdos" value="{{t.maTrinhDo}}">{{t.tenTrinhDo}}</option>
+                      </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Bảo hiểm:</label>
+                                        <div>
+                                            <ng-multiselect-dropdown formControlName="txt_mabaohiem" [placeholder]="'Chọn loại bảo hiểm'" [settings]="BHdropdownSettings" [data]="baoHiemList" [(ngModel)]="selectedBaoHiem"></ng-multiselect-dropdown>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Phụ cấp:</label>
+                                        <div>
+                                            <ng-multiselect-dropdown formControlName="txt_maphucap" [placeholder]="'Chọn loại phụ cấp'" [settings]="PCdropdownSettings" [data]="phuCapList" [(ngModel)]="selectedPhuCap"></ng-multiselect-dropdown>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Chức năng:</label>
+                                        <div>
+                                            <ng-multiselect-dropdown formControlName="txt_machucnang" [placeholder]="'Chọn loại chức năng'" [settings]="CNdropdownSettings" [data]="chucNangList" [(ngModel)]="selectedChucNang"></ng-multiselect-dropdown>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Mức lương(<span style="color:red ;">*</span>)</label>
+                                        <div><input formControlName="txt_mucluong" type="number" class="form-control" placeholder="Mức lương">
+                                            <div *ngIf="mucluong.invalid && (mucluong.dirty || mucluong.touched)">
+                                                <div *ngIf="mucluong.errors?.['required']" style="color:red ;">Mức lương không được rỗng!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="isCreate == false" class="form-group col-md-6">
+                                        <label class="col-form-label" for="">Trạng thái:</label>
+                                        <div>
+                                            <select formControlName="txt_trangthai" class="form-control" [(ngModel)]="trangThai">
+                        <option value="" selected disabled hidden>Trạng thái</option>
+                        <option [value]="1">Đang làm việc</option>
+                        <option [value]="0">Đã nghỉ việc</option>
+                      </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer form-group row">
+                                <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" [disabled]="frmNhanvien.invalid">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

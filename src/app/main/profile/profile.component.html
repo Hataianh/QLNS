@@ -1,0 +1,248 @@
+<!--**********************************
+            Content body start
+        ***********************************-->
+<div class="content-body">
+
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-5 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="media align-items-center mb-4">
+                            <img class="mr-3" src="{{user.hinhAnh}}" width="150" height="200" alt="">
+                            <div class="media-body">
+                                <h3 class="mb-0">{{user.hoTen}}</h3>
+                                <p class="text-muted mb-0">{{user.diaChi}}</p>
+                                <button type="button" class="btn mb-1 btn-primary btn-sm mt-3" (click)="openUpdateModal(user.maNhanVien) ">Tài khoản</button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="card card-profile text-center">
+                                    <button type="button" class="btn btn-outline-success" (click)="chamCongVao()">Bắt đầu
+                    làm
+                    việc</button>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card card-profile text-center">
+                                    <button type="button" class="btn btn-outline-dark" (click)="chamCongRa()">Kết thúc làm
+                    việc</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <h3>Thông tin</h3>
+                        <table>
+                            <tr>
+                                <td><strong class="text-dark mr-4">Phòng ban:</strong></td>
+                                <td>{{user.tenPhongBan}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="text-dark mr-4">Bộ phận:</strong></td>
+                                <td>{{user.tenBoPhan}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="text-dark mr-4">Chức vụ:</strong></td>
+                                <td>{{user.tenChucVu}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="text-dark mr-4">Email:</strong></td>
+                                <td>{{user.email}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="text-dark mr-4">SĐT:</strong></td>
+                                <td>{{user.dienThoai}}</td>
+                            </tr>
+
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 col-xl-8">
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Lịch sử công tác</h3>
+                        <h4>Phòng ban:</h4>
+                        <span *ngFor="let pb of phongban">
+              <p><a>{{pb.ngayBatDauPb|date:'dd/MM/yyyy'}}</a> - <a
+                  *ngIf="pb.ngayKetThucPb != null">{{pb.ngayKetThucPb|date:'dd/MM/yyyy'}}</a>
+                <a *ngIf="pb.ngayKetThucPb == null">Nay</a> : <a>{{pb.tenPhongBan}}</a>
+              </p>
+            </span>
+                        <h4>Bộ phận:</h4>
+                        <span *ngFor="let bp of bophan">
+              <p><a>{{bp.ngayBatDauBp|date:'dd/MM/yyyy'}}</a> - <a
+                  *ngIf="bp.ngayKetThucBp != null">{{bp.ngayKetThucBp|date:'dd/MM/yyyy'}}</a>
+                <a *ngIf="bp.ngayKetThucBp == null">Nay</a> : <a>{{bp.tenBoPhan}}</a>
+              </p>
+            </span>
+                        <h4>Chức vụ:</h4>
+                        <span *ngFor="let cv of chucvu">
+              <p><a>{{cv.ngayBatDauCv|date:'dd/MM/yyyy'}}</a> - <a
+                  *ngIf="cv.ngayKetThucCv != null">{{cv.ngayKetThucCv|date:'dd/MM/yyyy'}}</a>
+                <a *ngIf="cv.ngayKetThucCv == null">Nay</a> : <a>{{cv.tenChucVu}}</a>
+              </p>
+            </span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Danh sách Chấm công</h4>
+                        <!-- <button type="button" class="btn btn-success  m-b-10 m-l-5 mb-2" (click)="createModal()" id="toastr-success-top-right">Thêm mới <i class="fa fa-plus"></i></button> -->
+
+                        <div class="table-responsive" style="min-height: 450px;">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-3 col-md-3">
+                                        <div class="form-group" id="DataTables_Table_0_length">
+
+                                            <select class="form-control col-sm-6 col-md-6" style="height: 20px; font-size: 13px;" (ngModelChange)="LoadData($event)" [(ngModel)]="pageSize">
+                        <option selected hidden disabled>10</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                      </select>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class=" row " *ngIf="bangcong  && bangcong.length > 0">
+                                    <div class=" col-sm-12 ">
+                                        <table class=" table table-striped table-bordered zero-configuration dataTable table-sm row-border hover ">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nhân viên</th>
+                                                    <th>Ngày</th>
+                                                    <th>Giờ vào</th>
+                                                    <th>Giờ ra</th>
+                                                    <th>Trạng thái vào</th>
+                                                    <th>Trạng thái ra</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor=" let bc of bangcong ; let i = index">
+                                                    <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                                                    <td>{{ bc.hoTen }}</td>
+                                                    <td>{{ bc.gioVao|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{ bc.gioVao | date:'hh:mm a' }}</td>
+                                                    <td>{{ bc.gioRa | date:'hh:mm a' }}</td>
+                                                    <td *ngIf=" bc.trangThaiVao== null "><span class=" badge badge-success px-2 "></span>
+                                                    </td>
+                                                    <td *ngIf=" bc.trangThaiVao "><span class=" badge badge-danger px-2 ">{{bc.trangThaiVao}}</span>
+                                                    </td>
+                                                    <td *ngIf=" bc.trangThaiRa== null "><span class=" badge badge-success px-2 "></span>
+                                                    </td>
+                                                    <td *ngIf=" bc.trangThaiRa "><span class=" badge badge-danger px-2 ">{{bc.trangThaiRa}}</span>
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="bootstrap-pagination">
+                                            <ngb-pagination (pageChange)="LoadPage($event)" [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalItem"></ngb-pagination>
+
+                                        </div>
+                                    </div>
+                                    <div>{{ getShowingEntries() }}</div>
+                                </div>
+                                <div class=" row " *ngIf="bangcong  && bangcong.length == 0">
+                                    <h4>Không có dữ liệu</h4>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #/ container -->
+    </div>
+    <!--**********************************
+                          Content body end
+                      ***********************************-->
+
+    <div *ngIf="showUpdateModal" class="modal fade " id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đổi thông tin đăng nhập</h5>
+                    <button type="button" (click)="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-valide" *ngIf="doneSetupForm" [formGroup]="frmDoimatkhau" (ngSubmit)="OnSubmit(frmDoimatkhau.value)">
+                        <div class=" card">
+                            <div class="card-body">
+                                <div class="form-validation">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label class="col-form-label" for="">Email:</label>
+                                            <div><input formControlName="txt_email" type="text" class="form-control" placeholder="Email" readonly="readonly">
+                                                <!-- <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                        <div *ngIf="email.errors?.['required']" style="color:red ;">Email không được rỗng!</div>
+                        <div *ngIf="email.errors?.['email']" style="color:red ;">Không đúng định dạng của email!</div> -->
+                                                <!-- </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="col-form-label" for="">Mật khẩu hiện tại(<span
+                          style="color:red ;">*</span>):</label>
+                                            <div><input formControlName="txt_oldpassword" type="password" class="form-control" placeholder="Mật khẩu">
+                                                <div *ngIf="oldpassword.invalid && (oldpassword.dirty || oldpassword.touched)">
+                                                    <div *ngIf="oldpassword.errors?.['required']" style="color:red ;">Mật khẩu hiện tại là bắt buộc!
+                                                    </div>
+                                                    <div *ngIf="oldpassword.errors?.['samepassword']" style="color:red ;"> Mật khẩu hiện tại không đúng!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="col-form-label" for="">Mật khẩu(<span style="color:red ;">*</span>):</label>
+                                            <div><input formControlName="txt_password" type="password" class="form-control" placeholder="Mật khẩu">
+                                                <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                                                    <div *ngIf="password.errors?.['required']" style="color:red ;">Mật khẩu là bắt buộc</div>
+                                                    <div *ngIf="password.errors?.['password']" style="color:red ;"> Độ dài mật khẩu tối thiểu phải là 8 ký tự và phải chứa ký tự đặc biệt @#!$%&*.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="col-form-label" for="">Nhập lại mật khẩu(<span
+                          style="color:red ;">*</span>):</label>
+                                            <div>
+                                                <input formControlName="txt_repassword" type="password" class="form-control" placeholder="Nhập lại mật khẩu">
+                                                <div *ngIf="repassword.invalid && (repassword.dirty || repassword.touched)">
+                                                    <div *ngIf="repassword.errors?.['required']" style="color:red ;">Xác nhận lại mật khẩu là bắt buộc
+                                                    </div>
+                                                    <div *ngIf="repassword.errors?.['matching']" style="color:red ;">Xác thực lại mật khẩu không đúng
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer form-group row">
+                                        <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" [disabled]="frmDoimatkhau.invalid">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

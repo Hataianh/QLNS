@@ -1,0 +1,55 @@
+<!--*******************
+        Preloader start
+    ********************-->
+<!-- <div id="preloader">
+    <div class="loader">
+        <svg class="circular" viewBox="25 25 50 50">
+      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+    </svg>
+    </div>
+</div> -->
+<!--*******************
+      Preloader end
+  ********************-->
+<div class="login-form-bg h-100">
+  <div class="container h-100">
+    <div class="row justify-content-center h-100">
+      <div class="col-xl-6">
+        <div class="form-input-content">
+          <div class="card login-form mb-0">
+            <div class="card-body pt-5">
+              <a class="text-center">
+                <h4>Saiko</h4>
+              </a>
+
+              <form [formGroup]="frmLogin" (ngSubmit)="Login(frmLogin.value)" class="mt-5 mb-5 login-input">
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Email" formControlName="txt_email" id="email"
+                    ngModel>
+                  <div style="float: right;" *ngIf="email.invalid && (email.dirty || email.touched)">
+                    <span class="text-danger" *ngIf="email.errors?.['required']">Email không được rỗng</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" placeholder="Password" formControlName="txt_password"
+                    id="password" ngModel>
+                  <div style="float: right;" *ngIf="password.invalid && (password.dirty || password.touched)">
+                    <span class="text-danger" *ngIf="password.errors?.['required']">Mật khẩu không được rỗng</span>
+                  </div>
+                </div>
+                <button class="btn login-form__btn submit w-100" [disabled]="frmLogin.invalid" type="submit"
+                  onclick=" return signin()">Sign In</button>
+                <div class="text-danger" *ngIf="error">
+                  Email hoặc mật khẩu không đúng!
+                </div>
+              </form>
+              <a class="text-center" [routerLink]="['/forgot-password']">
+                <h6>Quên mật khẩu?</h6>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

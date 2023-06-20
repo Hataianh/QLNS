@@ -1,0 +1,14 @@
+export interface INhanvien {
+  maNhanVien: number;
+  hoTen: string;
+  gioiTinh: string;
+  ngaySinh: string;
+  cccd: string;
+  diaChi: string;
+  hinhAnh: string;
+  dienThoai: string;
+  email: string;
+  tenPhongBan: string;
+  tenBoPhan: string;
+  tenChucVu: string;
+}

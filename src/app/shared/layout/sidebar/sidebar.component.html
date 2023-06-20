@@ -1,0 +1,137 @@
+<!--**********************************
+            Sidebar start
+        ***********************************-->
+<div class="nk-sidebar">
+    <div class="nk-nav-scroll">
+        <ul class="metismenu" id="menu">
+            <li>
+                <a [routerLink]="['/']" aria-expanded="false">
+                    <i class="fa fa-tachometer" aria-hidden="true"></i><span class="nav-text">Tổng quan</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="['/nhan-vien']" aria-expanded="false">
+                    <i class="fa fa-users" aria-hidden="true"></i><span class="nav-text">Nhân viên</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="['/phong-ban']" aria-expanded="false">
+                    <i class="fa fa-window-maximize" aria-hidden="true"></i><span class="nav-text">Phòng ban</span>
+                </a>
+
+            </li>
+            <li>
+                <a [routerLink]="['/bo-phan']" aria-expanded="false">
+                    <i class="fa fa-laptop" aria-hidden="true"></i><span class="nav-text">Bộ phận</span>
+                </a>
+
+            </li>
+            <li>
+                <a [routerLink]="['/chuc-vu']" aria-expanded="false">
+                    <i class="fa fa-address-card-o" aria-hidden="true"></i><span class="nav-text">Chức vụ</span>
+                </a>
+
+            </li>
+
+            <li *ngIf="user.roleCV == 'Giám đốc' || user.rolePB == 'Tài chính và quản lý'">
+                <a [routerLink]="['/bang-cong']" aria-expanded="false">
+                    <i class="fa fa-table" aria-hidden="true"></i><span class="nav-text">Bảng chấm công</span>
+                </a>
+
+            </li>
+            <li *ngIf="user.roleCV == 'Giám đốc' || user.roleroleCV == 'Trưởng phòng'">
+                <a [routerLink]="['/nghi-phep']" aria-expanded="false">
+                    <i class="fa fa-calendar-times-o" aria-hidden="true"></i><span class="nav-text">Nghỉ phép</span>
+                </a>
+
+            </li>
+            <!-- <li class="nav-label">Quản lý</li> -->
+            <li *ngIf="user.roleCV == 'Giám đốc' || user.rolePB == 'Tài chính và quản lý' && user.roleCV == 'Trưởng phòng' || user.rolePB == 'Tài chính và quản lý' && user.roleBP == 'Nhân sự'">
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="fa fa-user" aria-hidden="true"></i><span class="nav-text">Nhân sự</span>
+                </a>
+                <ul aria-expanded="false">
+
+                    <li>
+                        <a [routerLink]="['/trinh-do']" aria-expanded="false">
+                            <i class="fa fa-graduation-cap" aria-hidden="true"></i><span class="nav-text">Trình độ</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a [routerLink]="['/hop-dong']" aria-expanded="false">
+                            <i class="fa fa-wpforms" aria-hidden="true"></i><span class="nav-text">Hợp đồng</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a [routerLink]="['/loai-hopdong']" aria-expanded="false">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="nav-text">Loại hợp đồng</span>
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+            <li *ngIf="user.roleCV == 'Giám đốc' || user.rolePB == 'Tài chính và quản lý' && user.roleCV == 'Trưởng phòng' || user.rolePB == 'Tài chính và quản lý' && user.roleBP == 'Kế toán'">
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon-notebook menu-icon"></i><span class="nav-text">Kế toán</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a [routerLink]="['/bao-hiem']" aria-expanded="false">
+                            <i class="fa fa-asterisk" aria-hidden="true"></i><span class="nav-text">Bảo hiểm</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a [routerLink]="['/phu-cap']" aria-expanded="false">
+                            <i class="fa fa-money" aria-hidden="true"></i><span class="nav-text">Phụ cấp</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a [routerLink]="['/khenthuong-kyluat']" aria-expanded="false">
+                            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="nav-text">Khen thưởng kỷ luật</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a [routerLink]="['/luong']" aria-expanded="false">
+                            <i class="fa fa-usd" aria-hidden="true"></i><span class="nav-text">Lương</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a [routerLink]="['/ung-luong']" aria-expanded="false">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i><span class="nav-text">Ứng lương</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a [routerLink]="['/bang-luong']" aria-expanded="false">
+                            <i class="fa fa-list-alt" aria-hidden="true"></i><span class="nav-text">Bảnglương</span>
+                        </a>
+
+                    </li>
+
+                </ul>
+            </li>
+            <!-- <li class="nav-label">CoffeeShop</li>
+      <li>
+        <a [routerLink]="['/sell']" aria-expanded="false">
+          <i class="fa fa-shopping-cart"></i><span class="nav-text">Bán Hàng</span>
+        </a>
+      </li>
+      <li *ngIf="user.role == 'Giám đốc'">
+        <a [routerLink]="['/user']" aria-expanded="false">
+          <i class="fa fa-user-o"></i><span class="nav-text">Nhân Viên</span>
+        </a>
+      </li> -->
+        </ul>
+    </div>
+</div>
+<!--**********************************
+          Sidebar end
+      ***********************************-->
